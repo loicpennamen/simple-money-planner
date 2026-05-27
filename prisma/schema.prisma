@@ -1,0 +1,39 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model BalanceMilestone {
+  id       String   @id
+  date     DateTime
+  amount   Int
+  currency String
+  note     String?
+
+  createdAt DateTime @default(now())
+}
+
+model CashVariation {
+  id       String   @id
+  date     DateTime
+  amount   Int
+  currency String
+  type     String
+  label    String
+
+  createdAt DateTime @default(now())
+}
+
+model DailyBalanceVariation {
+  id          String   @id
+  startDate   DateTime
+  endDate     DateTime
+  dailyAmount Int
+  currency    String
+  label       String
+
+  createdAt DateTime @default(now())
+}

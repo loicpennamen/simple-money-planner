@@ -12,3 +12,7 @@ vitest.config.*.timestamp*
 
 dist/
 tmp/
+
+/generated/prisma
+
+.env

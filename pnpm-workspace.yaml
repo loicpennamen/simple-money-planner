@@ -5,6 +5,7 @@ packages:
 strictDepBuilds: false
 allowBuilds:
   '@parcel/watcher': true
+  '@prisma/engines': true
   '@swc/core': true
   cypress: true
   esbuild: true
@@ -12,4 +13,5 @@ allowBuilds:
   lmdb: true
   msgpackr-extract: true
   nx: true
+  prisma: true
   unrs-resolver: true
