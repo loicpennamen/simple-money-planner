@@ -22,6 +22,7 @@ A cash flow projection application focused on long-term balance visualization an
 
 ## To-dos
 
+- Dates as Value Object (eg in DailyBalanceVariation)
 - Linter
 - Test suites
 
