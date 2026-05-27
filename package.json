@@ -1,0 +1,25 @@
+{
+  "name": "simple-money-planner",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devEngines": {
+    "packageManager": {
+      "name": "pnpm",
+      "version": "^11.3.0",
+      "onFail": "download"
+    }
+  },
+  "type": "module",
+  "devDependencies": {
+    "@nx/angular": "^22.7.4",
+    "@nx/node": "^22.7.4",
+    "nx": "22.7.4"
+  }
+}
