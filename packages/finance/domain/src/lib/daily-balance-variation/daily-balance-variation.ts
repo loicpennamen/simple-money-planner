@@ -12,29 +12,18 @@ export class DailyBalanceVariation {
   }
 
   totalImpact(): Money {
-    return this.dailyAmount.multiply(
-      this.durationInDays(),
-    );
+    return this.dailyAmount.multiply(this.durationInDays());
   }
 
   private assertValidDateRange(): void {
     if (this.endDate < this.startDate) {
-      throw new Error(
-        'End date must be after start date',
-      );
+      throw new Error('End date must be after start date');
     }
   }
 
   private durationInDays(): number {
-    const millisecondsPerDay =
-      1000 * 60 * 60 * 24;
+    const millisecondsPerDay = 1000 * 60 * 60 * 24;
 
-    return Math.floor(
-      (
-        this.endDate.getTime() -
-        this.startDate.getTime()
-      ) / millisecondsPerDay
-    ) + 1;
+    return Math.floor((this.endDate.getTime() - this.startDate.getTime()) / millisecondsPerDay) + 1;
   }
-
 }

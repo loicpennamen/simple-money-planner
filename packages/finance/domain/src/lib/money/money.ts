@@ -1,4 +1,4 @@
-import { Currency } from "../currency/currency";
+import { Currency } from '../currency/currency';
 
 export class Money {
   private constructor(
@@ -17,40 +17,25 @@ export class Money {
   add(other: Money): Money {
     this.assertSameCurrency(other);
 
-    return new Money(
-      this.cents + other.cents,
-      this.currency,
-    );
+    return new Money(this.cents + other.cents, this.currency);
   }
 
   subtract(other: Money): Money {
     this.assertSameCurrency(other);
 
-    return new Money(
-      this.cents - other.cents,
-      this.currency,
-    );
+    return new Money(this.cents - other.cents, this.currency);
   }
 
   equals(other: Money): boolean {
-    return (
-      this.cents === other.cents &&
-      this.currency === other.currency
-    );
+    return this.cents === other.cents && this.currency === other.currency;
   }
 
   invert(): Money {
-    return new Money(
-      this.cents * -1,
-      this.currency,
-    );
+    return new Money(this.cents * -1, this.currency);
   }
 
   multiply(factor: number): Money {
-    return new Money(
-      this.cents * factor,
-      this.currency,
-    );
+    return new Money(this.cents * factor, this.currency);
   }
 
   isNegative(): boolean {

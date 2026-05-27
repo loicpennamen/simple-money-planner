@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "start-web": "pnpm nx serve web",
-    "start-api": "pnpm nx serve api"
+    "start-api": "pnpm nx serve api",
+    "lint": "nx run-many -t lint",
+    "format": "prettier . --write"
   },
   "keywords": [],
   "author": "",
@@ -49,7 +51,7 @@
     "cypress": "^15.8.0",
     "esbuild": "^0.27.0",
     "eslint": "^9.8.0",
-    "eslint-config-prettier": "^10.0.0",
+    "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-cypress": "^3.5.0",
     "jest": "~30.3.0",
     "jest-environment-node": "~30.3.0",

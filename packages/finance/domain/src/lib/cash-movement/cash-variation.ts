@@ -1,8 +1,6 @@
 import { Money } from '../money/money';
 
-export type CashVariationType =
-  | 'income'
-  | 'expense';
+export type CashVariationType = 'income' | 'expense';
 
 export class CashVariation {
   constructor(
@@ -14,8 +12,6 @@ export class CashVariation {
   ) {}
 
   signedAmount(): Money {
-    return this.type === 'expense'
-      ? this.amount.invert()
-      : this.amount;
+    return this.type === 'expense' ? this.amount.invert() : this.amount;
   }
 }
