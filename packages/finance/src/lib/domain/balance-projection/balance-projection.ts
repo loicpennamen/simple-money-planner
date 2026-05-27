@@ -1,7 +1,7 @@
 import { BalanceMilestone } from '../balance-milestone/balance-milestone';
-import { CashVariation } from '../cash-movement/cash-variation';
 import { DailyBalanceVariation } from '../daily-balance-variation/daily-balance-variation';
 import { Money } from '../money/money';
+import { CashVariation } from '../cash-variation/cash-variation';
 
 export class BalanceProjection {
   constructor(
