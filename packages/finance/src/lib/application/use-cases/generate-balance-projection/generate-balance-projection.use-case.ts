@@ -1,14 +1,9 @@
+import { ProjectionPoint } from '../../../domain/projection-point/projection-point';
 import { BalanceProjection } from '../../../domain/balance-projection/balance-projection';
 import { BalanceProjectionGenerator } from '../../../domain/balance-projection/balance-projection-generator';
-import { CashVariation } from '../../../domain/cash-variation/cash-variation';
-import { DailyBalanceVariation } from '../../../domain/daily-balance-variation/daily-balance-variation';
-import { BalanceMilestone } from '../../../domain/balance-milestone/balance-milestone';
-import { ProjectionPoint } from '../../../domain/projection-point/projection-point';
+import { BalanceDataRepository } from '../../ports/balance-data.repository';
 
 export interface GenerateBalanceProjectionCommand {
-  milestone: BalanceMilestone;
-  cashVariations: CashVariation[];
-  dailyVariations: DailyBalanceVariation[];
   startDate: Date;
   endDate: Date;
 }
@@ -16,8 +11,18 @@ export interface GenerateBalanceProjectionCommand {
 export class GenerateBalanceProjectionUseCase {
   private readonly generator = new BalanceProjectionGenerator();
 
-  execute(command: GenerateBalanceProjectionCommand): ProjectionPoint[] {
-    const projection = new BalanceProjection(command.milestone, command.cashVariations, command.dailyVariations);
+  constructor(private readonly repository: BalanceDataRepository) {}
+
+  async execute(command: GenerateBalanceProjectionCommand): Promise<ProjectionPoint[]> {
+    const milestone = await this.repository.getLatestMilestoneBefore(command.startDate);
+
+    if (!milestone) {
+      throw new Error('No milestone found before projection start date');
+    }
+
+    const cashVariations = await this.repository.getCashVariationsBetween(milestone.date, command.endDate);
+    const dailyVariations = await this.repository.getDailyVariationsOverlapping(milestone.date, command.endDate);
+    const projection = new BalanceProjection(milestone, cashVariations, dailyVariations);
 
     return this.generator.generateDailyProjection(projection, command.startDate, command.endDate);
   }
