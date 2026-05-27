@@ -4,10 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start-web": "pnpm nx serve web",
-    "start-api": "pnpm nx serve api",
+    "web:start": "pnpm nx serve web",
+    "web:test": "pnpm nx test web",
+    "api:start": "pnpm nx serve api",
     "lint": "nx run-many -t lint",
-    "format": "prettier . --write"
+    "format": "prettier . --write",
+    "test": "pnpm nx run-many -t test"
   },
   "keywords": [],
   "author": "",
