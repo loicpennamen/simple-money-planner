@@ -1,13 +1,23 @@
-import { Component } from '@angular/core';
-import { RouterModule } from '@angular/router';
-import { NxWelcome } from './nx-welcome';
+import { HttpClient } from '@angular/common/http';
+import { Component, inject, resource } from '@angular/core';
+import { JsonPipe } from '@angular/common';
+import { firstValueFrom } from 'rxjs';
+
+const PROJECTION_QUERY_PARAMS = {
+  startDate: '2025-01-01',
+  endDate: '2025-01-10',
+};
 
 @Component({
-  imports: [NxWelcome, RouterModule],
+  imports: [JsonPipe],
   selector: 'app-root',
   templateUrl: './app.html',
   styleUrl: './app.sass',
 })
 export class App {
-  protected title = 'web';
+  private readonly http = inject(HttpClient);
+
+  protected readonly projection = resource({
+    loader: () => firstValueFrom(this.http.get('/api/projection', { params: PROJECTION_QUERY_PARAMS })),
+  });
 }
