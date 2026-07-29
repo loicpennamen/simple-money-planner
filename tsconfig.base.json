@@ -14,7 +14,8 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "paths": {
-      "@simple-money-planner/finance": ["./packages/finance/src/index.ts"]
+      "@simple-money-planner/finance": ["./packages/finance/src/index.ts"],
+      "@simple-money-planner/shared": ["./packages/shared/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

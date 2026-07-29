@@ -1,6 +1,7 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Component, computed, inject, resource, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
+import { ApiEndpoints } from '@simple-money-planner/shared';
 import { BalanceChart, BalancePoint } from './balance-chart/balance-chart';
 import { Alert } from './alert/alert';
 
@@ -21,11 +22,7 @@ export class App {
 
   protected readonly projection = resource({
     params: () => ({ startDate: this.periodStart(), endDate: this.periodEnd() }),
-    loader: ({ params }) =>
-      firstValueFrom(
-        // TODO centralize APIs endpoints
-        this.http.get<BalancePoint[]>('/api/projection', { params }),
-      ),
+    loader: ({ params }) => firstValueFrom(this.http.get<BalancePoint[]>(ApiEndpoints.Projections, { params })),
   });
 
   protected readonly errorMessage = computed(() => {

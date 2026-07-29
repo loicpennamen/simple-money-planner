@@ -1,4 +1,5 @@
 import { FastifyInstance } from 'fastify';
+import { ApiEndpoints } from '@simple-money-planner/shared';
 import { generateBalanceProjectionUseCase } from '../composition/finance';
 import { toProjectionPointDto } from '../mappers/projection-point.mapper';
 
@@ -9,7 +10,7 @@ interface ProjectionQuerystring {
 
 export default async function (fastify: FastifyInstance) {
   fastify.get<{ Querystring: ProjectionQuerystring }>(
-    '/projection',
+    ApiEndpoints.Projections,
     {
       schema: {
         querystring: {

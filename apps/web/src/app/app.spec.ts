@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import { ApiEndpoints } from '@simple-money-planner/shared';
 import { App } from './app';
 
 describe('App', () => {
@@ -19,7 +20,7 @@ describe('App', () => {
     const fixture = TestBed.createComponent(App);
     fixture.detectChanges();
 
-    const req = httpMock.expectOne((request) => request.url === '/api/projection');
+    const req = httpMock.expectOne((request) => request.url === ApiEndpoints.Projections);
     const startDate = req.request.params.get('startDate');
     const endDate = req.request.params.get('endDate');
     expect(startDate).toBeTruthy();
@@ -42,7 +43,7 @@ describe('App', () => {
     const fixture = TestBed.createComponent(App);
     fixture.detectChanges();
 
-    const initialReq = httpMock.expectOne((request) => request.url === '/api/projection');
+    const initialReq = httpMock.expectOne((request) => request.url === ApiEndpoints.Projections);
     initialReq.flush([{ date: initialReq.request.params.get('startDate'), balance: 1000 }]);
     await fixture.whenStable();
     fixture.detectChanges();
@@ -53,7 +54,7 @@ describe('App', () => {
     startInput.dispatchEvent(new Event('change'));
     fixture.detectChanges();
 
-    const updatedReq = httpMock.expectOne((request) => request.url === '/api/projection');
+    const updatedReq = httpMock.expectOne((request) => request.url === ApiEndpoints.Projections);
     expect(updatedReq.request.params.get('startDate')).toBe('2025-02-01');
     updatedReq.flush([{ date: '2025-02-01', balance: 1000 }]);
   });
@@ -62,7 +63,7 @@ describe('App', () => {
     const fixture = TestBed.createComponent(App);
     fixture.detectChanges();
 
-    const req = httpMock.expectOne((request) => request.url === '/api/projection');
+    const req = httpMock.expectOne((request) => request.url === ApiEndpoints.Projections);
     req.flush({ message: 'boom' }, { status: 500, statusText: 'Internal Server Error' });
 
     await fixture.whenStable();
