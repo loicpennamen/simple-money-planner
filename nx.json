@@ -79,6 +79,9 @@
       "linter": "eslint",
       "style": "sass",
       "unitTestRunner": "vitest-angular"
+    },
+    "@nx/angular:component": {
+      "style": "sass"
     }
   }
 }

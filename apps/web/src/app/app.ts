@@ -2,14 +2,15 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Component, computed, inject, resource } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { BalanceChart, BalancePoint } from './balance-chart/balance-chart';
+import { Alert } from './alert/alert';
 
 // TODO switchable dates
-// const PERIOD_START = '2024-12-01'; // should return error
-const PERIOD_START = '2025-01-01';
+const PERIOD_START = '2024-12-01'; // should return error
+// const PERIOD_START = '2025-01-01';
 const PERIOD_END = '2025-03-31';
 
 @Component({
-  imports: [BalanceChart],
+  imports: [BalanceChart, Alert],
   selector: 'app-root',
   templateUrl: './app.html',
   styleUrl: './app.sass',
