@@ -20,13 +20,13 @@ describe('App', () => {
     const fixture = TestBed.createComponent(App);
     fixture.detectChanges();
 
-    const req = httpMock.expectOne((request) => request.url === ApiEndpoints.Projections);
+    const req = httpMock.expectOne((request) => request.url === ApiEndpoints.PeriodChartData);
     const startDate = req.request.params.get('startDate');
     const endDate = req.request.params.get('endDate');
     expect(startDate).toBeTruthy();
     expect(endDate).toBeTruthy();
 
-    req.flush([{ date: startDate, balance: 1000 }]);
+    req.flush({ balanceProjection: [{ date: startDate, balance: 1000 }] });
 
     await fixture.whenStable();
     fixture.detectChanges();
@@ -43,8 +43,8 @@ describe('App', () => {
     const fixture = TestBed.createComponent(App);
     fixture.detectChanges();
 
-    const initialReq = httpMock.expectOne((request) => request.url === ApiEndpoints.Projections);
-    initialReq.flush([{ date: initialReq.request.params.get('startDate'), balance: 1000 }]);
+    const initialReq = httpMock.expectOne((request) => request.url === ApiEndpoints.PeriodChartData);
+    initialReq.flush({ balanceProjection: [{ date: initialReq.request.params.get('startDate'), balance: 1000 }] });
     await fixture.whenStable();
     fixture.detectChanges();
 
@@ -54,16 +54,16 @@ describe('App', () => {
     startInput.dispatchEvent(new Event('change'));
     fixture.detectChanges();
 
-    const updatedReq = httpMock.expectOne((request) => request.url === ApiEndpoints.Projections);
+    const updatedReq = httpMock.expectOne((request) => request.url === ApiEndpoints.PeriodChartData);
     expect(updatedReq.request.params.get('startDate')).toBe('2025-02-01');
-    updatedReq.flush([{ date: '2025-02-01', balance: 1000 }]);
+    updatedReq.flush({ balanceProjection: [{ date: '2025-02-01', balance: 1000 }] });
   });
 
   it('should render an alert when the request fails', async () => {
     const fixture = TestBed.createComponent(App);
     fixture.detectChanges();
 
-    const req = httpMock.expectOne((request) => request.url === ApiEndpoints.Projections);
+    const req = httpMock.expectOne((request) => request.url === ApiEndpoints.PeriodChartData);
     req.flush({ message: 'boom' }, { status: 500, statusText: 'Internal Server Error' });
 
     await fixture.whenStable();

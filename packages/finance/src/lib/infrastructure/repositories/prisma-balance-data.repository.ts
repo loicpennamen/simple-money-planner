@@ -27,6 +27,21 @@ export class PrismaBalanceDataRepository implements BalanceDataRepository {
     return new BalanceMilestone(model.id, model.date, Money.fromCents(model.amount), model.note ?? undefined);
   }
 
+  async getMilestonesBetween(startDate: Date, endDate: Date): Promise<BalanceMilestone[]> {
+    const models = await this.prisma.balanceMilestone.findMany({
+      where: {
+        date: {
+          gte: startDate,
+          lte: endDate,
+        },
+      },
+    });
+
+    return models.map(
+      (model) => new BalanceMilestone(model.id, model.date, Money.fromCents(model.amount), model.note ?? undefined),
+    );
+  }
+
   async getCashVariationsBetween(startDate: Date, endDate: Date): Promise<CashVariation[]> {
     const models = await this.prisma.cashVariation.findMany({
       where: {

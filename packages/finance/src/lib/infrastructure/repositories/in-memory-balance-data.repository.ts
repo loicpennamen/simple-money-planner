@@ -18,6 +18,10 @@ export class InMemoryBalanceDataRepository implements BalanceDataRepository {
     return validMilestones[0] ?? null;
   }
 
+  async getMilestonesBetween(startDate: Date, endDate: Date): Promise<BalanceMilestone[]> {
+    return this.milestones.filter((milestone) => milestone.date >= startDate && milestone.date <= endDate);
+  }
+
   async getCashVariationsBetween(startDate: Date, endDate: Date): Promise<CashVariation[]> {
     return this.cashVariations.filter((variation) => variation.date >= startDate && variation.date <= endDate);
   }

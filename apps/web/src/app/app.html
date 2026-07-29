@@ -23,15 +23,15 @@
     </div>
   </header>
 
-  @if (projection.error()) {
+  @if (periodChartData.error()) {
     <app-alert>
       {{ errorMessage() }}
     </app-alert>
-  } @else if (projection.isLoading()) {
+  } @else if (periodChartData.isLoading()) {
     <p class="text-sm text-slate-500">Loading...</p>
-  } @else if (projection.value(); as points) {
+  } @else if (periodChartData.value(); as chartData) {
     <section class="rounded-xl border border-outline bg-surface p-4 shadow-sm">
-      <app-balance-chart [points]="points" />
+      <app-balance-chart [points]="chartData.balanceProjection" />
     </section>
   }
 </main>

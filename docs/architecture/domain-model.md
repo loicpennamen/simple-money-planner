@@ -100,9 +100,10 @@ its one-day granularity, consumed as-is by the Angular line chart.
 
 The interface the application layer depends on to fetch the raw ingredients
 of a projection, without knowing whether they come from a database or
-memory: `getLatestMilestoneBefore`, `getCashVariationsBetween`,
-`getDailyVariationsOverlapping`. This dependency-inversion boundary is what
-lets the use case be unit-tested without a real database.
+memory: `getLatestMilestoneBefore`, `getMilestonesBetween`,
+`getCashVariationsBetween`, `getDailyVariationsOverlapping`. This
+dependency-inversion boundary is what lets the use cases be unit-tested
+without a real database.
 
 ### `GenerateBalanceProjectionUseCase`
 
@@ -116,6 +117,33 @@ projection between `startDate` and `endDate`?":
 3. Build a `BalanceProjection` from those three ingredients.
 4. Delegate to `BalanceProjectionGenerator` to produce the `ProjectionPoint[]`
    returned to the caller.
+
+### `PeriodChartData` (not a domain object)
+
+A display-oriented bundle for a requested `[startDate, endDate]` period,
+meant to feed the chart rather than to model the business:
+`balanceProjection` (the daily series from `GenerateBalanceProjectionUseCase`)
+plus, scoped strictly to `[startDate, endDate]`, the raw events that
+happened in it — `balanceMilestones`, `cashVariations` and
+`dailyBalanceVariations`. This is what lets the chart later plot the exact
+moment and amount of a milestone or variation instead of only the smoothed
+daily balance line. It lives in the application layer (not `domain/`)
+precisely because it isn't part of the business's ubiquitous language — it's
+a query result shaped for one particular consumer (the UI).
+
+### `GeneratePeriodChartDataUseCase`
+
+Builds a `PeriodChartData` for `[startDate, endDate]`:
+
+1. Delegates to `GenerateBalanceProjectionUseCase` for `balanceProjection`
+   (reusing its milestone-anchoring logic as-is).
+2. Fetches `balanceMilestones` via `getMilestonesBetween(startDate, endDate)`,
+   `cashVariations` via `getCashVariationsBetween(startDate, endDate)` and
+   `dailyBalanceVariations` via `getDailyVariationsOverlapping(startDate,
+   endDate)` — all scoped to the requested period itself, unlike the wider
+   `[milestone.date, endDate]` window `GenerateBalanceProjectionUseCase` uses
+   internally to compute the running balance.
+3. Wraps everything in a `PeriodChartData`.
 
 ## Infrastructure
 
@@ -133,20 +161,28 @@ Prisma's raw models (integer cents columns) back into domain objects via
 
 ## End-to-end flow
 
+The Angular app currently calls `GET /api/period-chart-data`, which returns a
+`PeriodChartData` covering the requested period:
+
 ```mermaid
 flowchart LR
-    A["HTTP GET /api/projection\n?startDate&endDate"] --> B[GenerateBalanceProjectionUseCase]
-    B --> C["BalanceDataRepository (port)"]
-    C --> D[PrismaBalanceDataRepository]
-    D --> E[(PostgreSQL)]
-    B --> F[BalanceProjection]
-    F --> G[BalanceProjectionGenerator]
-    G --> H["ProjectionPoint[]"]
-    H --> I["ProjectionPointDto[]\n(projection-point.mapper)"]
-    I --> J[Angular BalanceChart]
+    A["HTTP GET /api/period-chart-data\n?startDate&endDate"] --> B[GeneratePeriodChartDataUseCase]
+    B --> C[GenerateBalanceProjectionUseCase]
+    C --> D["BalanceDataRepository (port)"]
+    B --> D
+    D --> E[PrismaBalanceDataRepository]
+    E --> F[(PostgreSQL)]
+    B --> G[PeriodChartData]
+    G --> H["PeriodChartDataDto\n(period-chart-data.mapper)"]
+    H --> I[Angular App]
 ```
 
-The API's `ProjectionPointDto` (`apps/api/src/app/dto/projection-point.dto.ts`)
-and its mapper are the boundary that turns domain `ProjectionPoint`/`Money`
-objects into plain `{ date: string; balance: number }` JSON — the domain
-layer itself never serializes anything.
+The API's `PeriodChartDataDto` (`apps/api/src/app/dto/period-chart-data.dto.ts`)
+and its mapper are the boundary that turns the `PeriodChartData` bundle
+(and the `Money`/`Date` values inside it) into plain JSON — the domain and
+application layers themselves never serialize anything.
+
+`GET /api/projection` (`ApiEndpoints.Projections`) still exists, returning
+just the `ProjectionPointDto[]` via `GenerateBalanceProjectionUseCase`, but
+is currently unused by the frontend — kept around for now rather than
+removed.

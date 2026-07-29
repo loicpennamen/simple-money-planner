@@ -5,6 +5,8 @@ import { DailyBalanceVariation } from '../../domain/daily-balance-variation/dail
 export interface BalanceDataRepository {
   getLatestMilestoneBefore(date: Date): Promise<BalanceMilestone | null>;
 
+  getMilestonesBetween(startDate: Date, endDate: Date): Promise<BalanceMilestone[]>;
+
   getCashVariationsBetween(startDate: Date, endDate: Date): Promise<CashVariation[]>;
 
   getDailyVariationsOverlapping(startDate: Date, endDate: Date): Promise<DailyBalanceVariation[]>;

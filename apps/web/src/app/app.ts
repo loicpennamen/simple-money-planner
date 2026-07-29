@@ -5,8 +5,12 @@ import { ApiEndpoints } from '@simple-money-planner/shared';
 import { BalanceChart, BalancePoint } from './balance-chart/balance-chart';
 import { Alert } from './alert/alert';
 
-const DEFAULT_PERIOD_START = '2024-12-01';
-const DEFAULT_PERIOD_END = '2025-03-31';
+const DEFAULT_PERIOD_START = '2025-01-01';
+const DEFAULT_PERIOD_END = '2025-01-31';
+
+interface PeriodChartData {
+  balanceProjection: BalancePoint[];
+}
 
 @Component({
   imports: [BalanceChart, Alert],
@@ -20,13 +24,13 @@ export class App {
   protected readonly periodStart = signal(DEFAULT_PERIOD_START);
   protected readonly periodEnd = signal(DEFAULT_PERIOD_END);
 
-  protected readonly projection = resource({
+  protected readonly periodChartData = resource({
     params: () => ({ startDate: this.periodStart(), endDate: this.periodEnd() }),
-    loader: ({ params }) => firstValueFrom(this.http.get<BalancePoint[]>(ApiEndpoints.Projections, { params })),
+    loader: ({ params }) => firstValueFrom(this.http.get<PeriodChartData>(ApiEndpoints.PeriodChartData, { params })),
   });
 
   protected readonly errorMessage = computed(() => {
-    const error = this.projection.error();
+    const error = this.periodChartData.error();
     return error instanceof HttpErrorResponse ? (error.error?.message ?? error.message) : String(error);
   });
 

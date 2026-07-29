@@ -1,6 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import { PrismaPg } from '@prisma/adapter-pg';
 import { GenerateBalanceProjectionUseCase } from '@simple-money-planner/finance';
+import { GeneratePeriodChartDataUseCase } from '@simple-money-planner/finance';
 import { BalanceProjectionGenerator } from '@simple-money-planner/finance';
 import { PrismaBalanceDataRepository } from '@simple-money-planner/finance';
 
@@ -10,3 +11,7 @@ const repository = new PrismaBalanceDataRepository(prisma);
 const generator = new BalanceProjectionGenerator();
 
 export const generateBalanceProjectionUseCase = new GenerateBalanceProjectionUseCase(repository, generator);
+export const generatePeriodChartDataUseCase = new GeneratePeriodChartDataUseCase(
+  repository,
+  generateBalanceProjectionUseCase,
+);
