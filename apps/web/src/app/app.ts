@@ -1,13 +1,11 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Component, computed, inject, resource } from '@angular/core';
+import { Component, computed, inject, resource, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { BalanceChart, BalancePoint } from './balance-chart/balance-chart';
 import { Alert } from './alert/alert';
 
-// TODO switchable dates
-const PERIOD_START = '2024-12-01'; // should return error
-// const PERIOD_START = '2025-01-01';
-const PERIOD_END = '2025-03-31';
+const DEFAULT_PERIOD_START = '2024-12-01';
+const DEFAULT_PERIOD_END = '2025-03-31';
 
 @Component({
   imports: [BalanceChart, Alert],
@@ -18,16 +16,15 @@ const PERIOD_END = '2025-03-31';
 export class App {
   private readonly http = inject(HttpClient);
 
-  protected readonly periodStartLabel = formatDateToEnglish(PERIOD_START);
-  protected readonly periodEndLabel = formatDateToEnglish(PERIOD_END);
+  protected readonly periodStart = signal(DEFAULT_PERIOD_START);
+  protected readonly periodEnd = signal(DEFAULT_PERIOD_END);
 
   protected readonly projection = resource({
-    loader: () =>
+    params: () => ({ startDate: this.periodStart(), endDate: this.periodEnd() }),
+    loader: ({ params }) =>
       firstValueFrom(
         // TODO centralize APIs endpoints
-        this.http.get<BalancePoint[]>('/api/projection', {
-          params: { startDate: PERIOD_START, endDate: PERIOD_END },
-        }),
+        this.http.get<BalancePoint[]>('/api/projection', { params }),
       ),
   });
 
@@ -35,9 +32,12 @@ export class App {
     const error = this.projection.error();
     return error instanceof HttpErrorResponse ? (error.error?.message ?? error.message) : String(error);
   });
-}
 
-/** @deprecated - TODO create automatic date formatting as pipes depending on i18n locale **/
-function formatDateToEnglish(iso: string): string {
-  return new Intl.DateTimeFormat('en-US', { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(iso));
+  protected onPeriodStartChange(event: Event): void {
+    this.periodStart.set((event.target as HTMLInputElement).value);
+  }
+
+  protected onPeriodEndChange(event: Event): void {
+    this.periodEnd.set((event.target as HTMLInputElement).value);
+  }
 }

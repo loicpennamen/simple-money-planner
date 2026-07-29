@@ -33,9 +33,29 @@ describe('App', () => {
     const compiled = fixture.nativeElement as HTMLElement;
     expect(compiled.querySelector('app-balance-chart canvas')).toBeTruthy();
 
-    const periodText = compiled.querySelector('header')?.textContent ?? '';
-    expect(periodText).toContain(new Date(startDate as string).getUTCFullYear().toString());
-    expect(periodText).toContain(new Date(endDate as string).getUTCFullYear().toString());
+    const dateInputs = compiled.querySelectorAll<HTMLInputElement>('input[type="date"]');
+    expect(dateInputs[0].value).toBe(startDate);
+    expect(dateInputs[1].value).toBe(endDate);
+  });
+
+  it('should reload the projection when a date input changes', async () => {
+    const fixture = TestBed.createComponent(App);
+    fixture.detectChanges();
+
+    const initialReq = httpMock.expectOne((request) => request.url === '/api/projection');
+    initialReq.flush([{ date: initialReq.request.params.get('startDate'), balance: 1000 }]);
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    const compiled = fixture.nativeElement as HTMLElement;
+    const startInput = compiled.querySelectorAll<HTMLInputElement>('input[type="date"]')[0];
+    startInput.value = '2025-02-01';
+    startInput.dispatchEvent(new Event('change'));
+    fixture.detectChanges();
+
+    const updatedReq = httpMock.expectOne((request) => request.url === '/api/projection');
+    expect(updatedReq.request.params.get('startDate')).toBe('2025-02-01');
+    updatedReq.flush([{ date: '2025-02-01', balance: 1000 }]);
   });
 
   it('should render an alert when the request fails', async () => {
