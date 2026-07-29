@@ -7,6 +7,7 @@
     "web:start": "pnpm nx serve web",
     "web:test": "pnpm nx test web",
     "api:start": "pnpm nx serve api",
+    "restart": "node tools/dev/restart.mjs",
     "lint": "nx run-many -t lint",
     "format": "prettier . --write",
     "test": "pnpm nx run-many -t test"
