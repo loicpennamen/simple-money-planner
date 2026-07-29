@@ -1,5 +1,16 @@
-@if (projection.error(); as error) {
-  <pre>{{ error }}</pre>
-} @else {
-  <pre>{{ projection.value() | json }}</pre>
-}
+<main class="mx-auto flex min-h-screen xl:max-w-7xl flex-col gap-6 bg-surface-muted p-6 font-sans text-slate-900">
+  <header>
+    <h1 class="text-2xl font-semibold">Projection</h1>
+    <p class="text-sm text-slate-500">From {{ periodStartLabel }} to {{ periodEndLabel }}</p>
+  </header>
+
+  @if (projection.error()) {
+    <p class="rounded-lg border border-negative/30 bg-negative/5 p-4 text-sm text-negative">{{ errorMessage() }}</p>
+  } @else if (projection.isLoading()) {
+    <p class="text-sm text-slate-500">Loading...</p>
+  } @else if (projection.value(); as points) {
+    <section class="rounded-xl border border-outline bg-surface p-4 shadow-sm">
+      <app-balance-chart [points]="points" />
+    </section>
+  }
+</main>

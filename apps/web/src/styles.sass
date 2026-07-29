@@ -1,1 +1,17 @@
-/* You can add global styles to this file, and also import other style files */
+@use './styles/tailwind-theme' as theme
+
+@import "tailwindcss/index.css"
+
+@theme
+  --color-primary: #{theme.$color-primary}
+  --color-primary-light: #{theme.$color-primary-light}
+  --color-primary-dark: #{theme.$color-primary-dark}
+  --color-positive: #{theme.$color-positive}
+  --color-negative: #{theme.$color-negative}
+  --color-surface: #{theme.$color-surface}
+  --color-surface-muted: #{theme.$color-surface-muted}
+  --color-outline: #{theme.$color-outline}
+  --font-sans: #{theme.$font-sans}
+
+body
+  font-family: var(--font-sans)
