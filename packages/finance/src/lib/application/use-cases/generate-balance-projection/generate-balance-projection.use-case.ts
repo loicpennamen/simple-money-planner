@@ -9,9 +9,10 @@ export interface GenerateBalanceProjectionCommand {
 }
 
 export class GenerateBalanceProjectionUseCase {
-  private readonly generator = new BalanceProjectionGenerator();
-
-  constructor(private readonly repository: BalanceDataRepository) {}
+  constructor(
+    private readonly repository: BalanceDataRepository,
+    private readonly generator: BalanceProjectionGenerator,
+  ) {}
 
   async execute(command: GenerateBalanceProjectionCommand): Promise<ProjectionPoint[]> {
     const milestone = await this.repository.getLatestMilestoneBefore(command.startDate);

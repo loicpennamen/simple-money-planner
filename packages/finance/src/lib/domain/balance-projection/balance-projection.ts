@@ -10,7 +10,6 @@ export class BalanceProjection {
     private readonly dailyVariations: DailyBalanceVariation[],
   ) {}
 
-  // todo write tests for this
   balanceAt(date: Date): Money {
     // Calculating a balance requires an anterior or equal milestone to begin at
     if (this.milestone.date > date) {
@@ -21,7 +20,6 @@ export class BalanceProjection {
 
     // Add or remove cash based on registered outcome | income in the corresponding period of time
     const cashVariationsInInterval = this.cashVariations.filter(
-      // todo write tests to check this filter
       (cashVariation) => cashVariation.date >= this.milestone.date && cashVariation.date <= date,
     );
     for (const cashVariation of cashVariationsInInterval) {
@@ -30,7 +28,6 @@ export class BalanceProjection {
 
     // Add or remove cash based on recurring daily outcome | income in the corresponding period of time
     const overlappingDailyVariations = this.dailyVariations.filter(
-      // todo write tests to check this filter
       (variation) => variation.endDate >= this.milestone.date && variation.startDate <= date,
     );
     for (const variation of overlappingDailyVariations) {
