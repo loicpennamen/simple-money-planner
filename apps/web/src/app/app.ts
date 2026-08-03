@@ -1,16 +1,12 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Component, computed, inject, resource, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
-import { ApiEndpoints } from '@simple-money-planner/shared';
-import { BalanceChart, BalancePoint } from './balance-chart/balance-chart';
+import { ApiEndpoints, PeriodChartDataDto } from '@simple-money-planner/shared';
+import { BalanceChart } from './balance-chart/balance-chart';
 import { Alert } from './alert/alert';
 
 const DEFAULT_PERIOD_START = '2025-01-01';
 const DEFAULT_PERIOD_END = '2025-01-31';
-
-interface PeriodChartData {
-  balanceProjection: BalancePoint[];
-}
 
 @Component({
   imports: [BalanceChart, Alert],
@@ -26,7 +22,7 @@ export class App {
 
   protected readonly periodChartData = resource({
     params: () => ({ startDate: this.periodStart(), endDate: this.periodEnd() }),
-    loader: ({ params }) => firstValueFrom(this.http.get<PeriodChartData>(ApiEndpoints.PeriodChartData, { params })),
+    loader: ({ params }) => firstValueFrom(this.http.get<PeriodChartDataDto>(ApiEndpoints.PeriodChartData, { params })),
   });
 
   protected readonly errorMessage = computed(() => {

@@ -1,5 +1,5 @@
 import { PeriodChartData } from '@simple-money-planner/finance';
-import { PeriodChartDataDto } from '../dto/period-chart-data.dto';
+import { PeriodChartDataDto } from '@simple-money-planner/shared';
 import { toProjectionPointDto } from './projection-point.mapper';
 
 export function toPeriodChartDataDto(data: PeriodChartData): PeriodChartDataDto {

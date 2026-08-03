@@ -1,5 +1,5 @@
 import { ProjectionPoint } from '@simple-money-planner/finance';
-import { ProjectionPointDto } from '../dto/projection-point.dto';
+import { ProjectionPointDto } from '@simple-money-planner/shared';
 
 export function toProjectionPointDto(point: ProjectionPoint): ProjectionPointDto {
   return {
